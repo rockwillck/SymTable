@@ -67,7 +67,6 @@ int SymTable_put(SymTable_T table, const char* key, const void* value) {
 
    assert(table != NULL);
    assert(key != NULL);
-   assert(value != NULL);
 
    if (SymTable_contains(table, key)) {
       return 0;
@@ -91,7 +90,6 @@ void* SymTable_replace(SymTable_T table, const char* key,
 
    assert(table != NULL);
    assert(key != NULL);
-   assert(value != NULL);
 
    for (current = table->first; current != NULL; 
       current = current->next) {
@@ -137,6 +135,7 @@ void *SymTable_get(SymTable_T table, const char *key) {
 void *SymTable_remove(SymTable_T table, const char *key) {
    Node_T current;
    Node_T prev = NULL;
+   void* value;
 
    assert(table != NULL);
    assert(key != NULL);
@@ -149,7 +148,7 @@ void *SymTable_remove(SymTable_T table, const char *key) {
          } else {
             prev->next = current->next;
          }
-         void* value = current->value;
+         value = current->value;
          free((char*)current->key);
          free(current);
          return value;
