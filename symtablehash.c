@@ -36,14 +36,21 @@ static size_t SymTable_hash(const char* pcKey, size_t uBucketCount)
    return uHash % uBucketCount;
 }
 
-static SymTable_T create_table(size_t numElements)
+static Node_T* SymTable_create_buckets(size_t numElements)
+{
+    Node_T* buckets;
+    buckets = calloc(numElements, sizeof(Node_T));
+    return buckets;
+}
+
+SymTable_T SymTable_new(void)
 {
     SymTable_T table;
     table = malloc(sizeof(struct SymTable));
     if (table == NULL)
         return NULL;
-    table->numBuckets = numElements;
-    table->buckets = calloc(numElements, sizeof(Node_T));
+    table->numBuckets = initial_num_buckets;
+    table->buckets = SymTable_create_buckets(initial_num_buckets);
     table->count = 0;
     if (table->buckets == NULL) {
         free(table);
@@ -52,24 +59,23 @@ static SymTable_T create_table(size_t numElements)
     return table;
 }
 
-SymTable_T SymTable_new(void)
-{
-    return create_table(initial_num_buckets);
-}
-
-void SymTable_free(SymTable_T table) {
+static void SymTable_free_buckets(Node_T bucket) {
     Node_T current;
     Node_T next;
+
+    for (current = bucket; current != NULL; current = next) {
+        next = current->next;
+        free((char*)current->key);
+        free(current);
+    }
+}
+void SymTable_free(SymTable_T table) {
     size_t i;
 
     assert(table != NULL);
 
     for (i = 0; i < table->numBuckets; i++) {
-        for (current = table->buckets[i]; current != NULL; current = next) {
-            next = current->next;
-            free((char*)current->key);
-            free(current);
-        }
+        SymTable_free_buckets(table->buckets[i]);
     }
     free(table->buckets);
     free(table);
@@ -135,7 +141,7 @@ void* SymTable_get(SymTable_T table, const char* key) {
         }
     }
 
-    return 0;
+    return NULL;
 }
 
 void* SymTable_remove(SymTable_T table, const char* key) {
@@ -182,25 +188,31 @@ void SymTable_map(SymTable_T table, SymTableMapFunction apply, const void* param
     }
 }
 
-static void SymTable_reHash_and_put(const char* key, void* value, void* newTarget) {
-    SymTable_put(newTarget, key, (SymTable_T)value);
-}
-static SymTable_T SymTable_expand(SymTable_T table, size_t newSize) {
-    SymTable_T newTable;
-    SymTableMapFunction rehashFunc;
+static void SymTable_expand(SymTable_T table, size_t newSize) {
+    Node_T* newBuckets;
+    Node_T current;
+    Node_T next;
+    size_t i;
+    size_t newHash;
 
     assert(table != NULL);
-
-    newTable = create_table(newSize);
-    if (newTable == NULL) {
-        return table;
+    
+    newBuckets = SymTable_create_buckets(newSize);
+    if (newBuckets == NULL) {
+        return;
     }
+    for (i = 0; i < table->numBuckets; i++) {
+        for (current = table->buckets[i]; current != NULL; current = next) {
+            next = current->next;
+            newHash = SymTable_hash(current->key, newSize);
+            current->next = newBuckets[newHash];
+            newBuckets[newHash] = current;
+        }
+    }
+    free(table->buckets);
 
-    rehashFunc = SymTable_reHash_and_put;
-
-    SymTable_map(table, rehashFunc, newTable);
-
-    return newTable;
+    table->buckets = newBuckets;
+    table->numBuckets = newSize;
 }
 
 int SymTable_put(SymTable_T table, const char* key, const void* value) {
@@ -221,28 +233,42 @@ int SymTable_put(SymTable_T table, const char* key, const void* value) {
     }
     strcpy((char*)keyCopy, key);
 
-    if (table->count + 1 > 32749) {
-        SymTable_expand(table, 65521);
-    } else if (table->count + 1 > 16381) {
-        SymTable_expand(table, 32749);
-    } else if (table->count + 1 > 8191) {
-        SymTable_expand(table, 16381);
-    } else if (table->count + 1 > 4093) {
-        SymTable_expand(table, 8191);
-    } else if (table->count + 1 > 2039) {
-        SymTable_expand(table, 4093);
-    } else if (table->count + 1 > 1021) {
-        SymTable_expand(table, 2039);
-    } else if (table->count + 1 > 509) {
-        SymTable_expand(table, 1021);
-    }
-
-    hash = SymTable_hash(keyCopy, table->numBuckets);
-
     new = (Node_T)malloc(sizeof(struct Node));
     if (new == NULL) {
+        free((char*)keyCopy);
         return 0;
     }
+
+    if (table->count == table->numBuckets) {
+        switch(table->numBuckets) {
+            case(509):
+                SymTable_expand(table, 1021);
+                break;
+            case(1021):
+                SymTable_expand(table, 2039);
+                break;
+            case(2039):
+                SymTable_expand(table, 4093);
+                break;
+            case(4093):
+                SymTable_expand(table, 8191);
+                break;
+            case(8191):
+                SymTable_expand(table, 16381);
+                break;
+            case(16381):
+                SymTable_expand(table, 32749);
+                break;
+            case(32749):
+                SymTable_expand(table, 65521);
+                break;
+            default:
+                break;
+        }
+    } 
+    
+    hash = SymTable_hash(keyCopy, table->numBuckets);
+
     new->key = keyCopy;
     new->value = (void*)value;
     new->next = table->buckets[hash];

@@ -15,6 +15,7 @@ typedef struct SymTableNode* Node_T;
 
 struct SymTable {
    Node_T first;
+   size_t count;
 };
 
 SymTable_T SymTable_new(void)
@@ -27,6 +28,7 @@ SymTable_T SymTable_new(void)
    }
 
    table->first = NULL;
+   table->count = 0;
    return table;
 }
 
@@ -45,26 +47,15 @@ void SymTable_free(SymTable_T table) {
 }
 
 size_t SymTable_getLength(SymTable_T table) {
-   Node_T current;
-   size_t count = 0;
-
    assert(table != NULL);
 
-   for (current = table->first; current != NULL; 
-      current = current->next) {
-      count++;
-   }
-   return count;
+   return table->count;
 }
 
 int SymTable_put(SymTable_T table, const char* key, const void* value) {
    Node_T new;
-   const char* keyCopy = malloc(strlen(key) + 1);
-   if (keyCopy == NULL) {
-      return 0;
-   }
-   strcpy((char*)keyCopy, key);
-
+   const char* keyCopy;
+   
    assert(table != NULL);
    assert(key != NULL);
 
@@ -72,14 +63,23 @@ int SymTable_put(SymTable_T table, const char* key, const void* value) {
       return 0;
    }
 
-   new = (Node_T)malloc(sizeof(struct SymTableNode));
-   if (new == NULL) {
+   keyCopy = malloc(strlen(key) + 1);
+   if (keyCopy == NULL) {
       return 0;
    }
+   strcpy((char*)keyCopy, key);
+
+   new = (Node_T)malloc(sizeof(struct SymTableNode));
+   if (new == NULL) {
+      free((char*)keyCopy);
+      return 0;
+   }
+   
    new->key = keyCopy;
    new->value = (void*)value;
    new->next = table->first;
    table->first = new;
+   table->count++;
    return 1;
 }
 
@@ -151,6 +151,8 @@ void *SymTable_remove(SymTable_T table, const char *key) {
          value = current->value;
          free((char*)current->key);
          free(current);
+
+         table->count--;
          return value;
       }
       prev = current;
