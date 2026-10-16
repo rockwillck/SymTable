@@ -158,9 +158,6 @@ void *SymTable_remove(SymTable_T table, const char *key) {
    return NULL;
 }
 
-typedef void (*SymTableMapFunction)(const char* key, void* value, 
-   void* param);
-
 void SymTable_map(SymTable_T table, SymTableMapFunction apply, 
    const void* param) {
    Node_T current;
