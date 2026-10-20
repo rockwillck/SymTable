@@ -3,7 +3,6 @@
 /* Author:   William and Megan                                        */
 /*--------------------------------------------------------------------*/
 
-/* including header file */
 #include "symtable.h"
 
 /* The number of buckets in hash table to begin with */
@@ -26,6 +25,7 @@
 /* Defines Node_T as a pointer of struct Node type */
 typedef struct Node *Node_T;
 
+/* Defines structure of symbol table */
 struct SymTable
 {
     /* Number of buckets */
@@ -36,6 +36,7 @@ struct SymTable
     size_t count;
 };
 
+/* Defines structure of a node */
 struct Node
 {
     /* binding key pointer */
