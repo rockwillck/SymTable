@@ -7,6 +7,7 @@
 #include <assert.h>
 #include <string.h>
 
+/* Defines SymTable_T as a pointer of struct SymTable */
 typedef struct SymTable *SymTable_T;
 
 /* SymTable_new takes no parameters and returns new table
