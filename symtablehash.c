@@ -3,6 +3,7 @@
 /* Author:   William and Megan                                        */
 /*--------------------------------------------------------------------*/
 
+/* including header file */
 #include "symtable.h"
 
 /* The number of buckets in hash table to begin with */
@@ -61,7 +62,7 @@ static size_t SymTable_hash(const char *pcKey, size_t uBucketCount)
     return uHash % uBucketCount;
 }
 
-/* Return */
+/* Returns pointer to bucket with size numElements */
 static Node_T *SymTable_create_buckets(size_t numElements)
 {
     Node_T *buckets;
@@ -86,7 +87,7 @@ SymTable_T SymTable_new(void)
     return table;
 }
 
-/* Frees buckets */
+/* Returns nothing and frees all nodes in bucket */
 static void SymTable_free_buckets(Node_T bucket)
 {
     Node_T current;
@@ -239,6 +240,7 @@ void SymTable_map(SymTable_T table, SymTableMapFunction apply, const void *param
     }
 }
 
+/* retuns nothing and rehashes table to fit newSize of elemets */
 static void SymTable_expand(SymTable_T table, size_t newSize)
 {
     Node_T *newBuckets;
