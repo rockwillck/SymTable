@@ -16,6 +16,7 @@ struct SymTableNode
    struct SymTableNode *next;
 };
 
+/* Defines Node_T as a pointer of struct Node type */
 typedef struct SymTableNode *Node_T;
 
 /* Defines structure of symbol table */
