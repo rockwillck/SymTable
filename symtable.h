@@ -26,13 +26,11 @@ size_t SymTable_getLength(SymTable_T table);
 It creates a new node at the front of the linked list containing a copy
 of the key and the given value. Returns 0 if the key already exists or
 memory allocation fails, and 1 if successful. */
-int SymTable_put(SymTable_T table, const char *key,
-                 const void *value);
+int SymTable_put(SymTable_T table, const char *key, const void *value);
 
 /* SymTable_replace takes a symbol table, a key, and a value as parameters. Replaces the old value
 the key pointed too with the new value and returns the old value */
-void *SymTable_replace(SymTable_T table, const char *key,
-                       const void *value);
+void *SymTable_replace(SymTable_T table, const char *key, const void *value);
 
 /* SymTable_contains takes a symbol table and key as parameters, compares the key passed in
 to each key in the symbol table. If the key is found in the symbol table
@@ -50,11 +48,10 @@ returns the value that was removed. If the key is not found in the symbol table 
 void *SymTable_remove(SymTable_T table, const char *key);
 
 /* Defines a function pointer type that take in a key, value, and extra parameter */
-typedef void (*SymTableMapFunction)(const char *key, void *value,
-                                    void *param);
+typedef void (*SymTableMapFunction)(const char *key, void *value, void *param);
+
 /* SymTable_map takes a symbol table, apply function and extra parameter. Iterates through
 each node in the symbol table and applies SymTableMapFunction to each element. Returns nothing */
-void SymTable_map(SymTable_T table, SymTableMapFunction apply,
-                  const void *param);
+void SymTable_map(SymTable_T table, SymTableMapFunction apply, const void *param);
 
 #endif
