@@ -61,7 +61,7 @@ static size_t SymTable_hash(const char *pcKey, size_t uBucketCount)
     return uHash % uBucketCount;
 }
 
-/* Creates buckets */
+/* Return */
 static Node_T *SymTable_create_buckets(size_t numElements)
 {
     Node_T *buckets;
@@ -69,7 +69,6 @@ static Node_T *SymTable_create_buckets(size_t numElements)
     return buckets;
 }
 
-/* Creates new hash table */
 SymTable_T SymTable_new(void)
 {
     SymTable_T table;
@@ -101,7 +100,6 @@ static void SymTable_free_buckets(Node_T bucket)
     }
 }
 
-/* Frees hash table */
 void SymTable_free(SymTable_T table)
 {
     size_t i;
@@ -116,7 +114,6 @@ void SymTable_free(SymTable_T table)
     free(table);
 }
 
-/* Gets length of hash table */
 size_t SymTable_getLength(SymTable_T table)
 {
     assert(table != NULL);
@@ -124,7 +121,6 @@ size_t SymTable_getLength(SymTable_T table)
     return table->count;
 }
 
-/* Replaces old value with new value */
 void *SymTable_replace(SymTable_T table, const char *key,
                        const void *value)
 {
@@ -150,7 +146,6 @@ void *SymTable_replace(SymTable_T table, const char *key,
     return oldValue;
 }
 
-/* Checks if key exists in hash table */
 int SymTable_contains(SymTable_T table, const char *key)
 {
     size_t hash;
@@ -170,7 +165,6 @@ int SymTable_contains(SymTable_T table, const char *key)
     return 0;
 }
 
-/* Gets value of a key */
 void *SymTable_get(SymTable_T table, const char *key)
 {
     size_t hash;
@@ -192,7 +186,6 @@ void *SymTable_get(SymTable_T table, const char *key)
     return NULL;
 }
 
-/* removes node from linked list in the hash table */
 void *SymTable_remove(SymTable_T table, const char *key)
 {
     Node_T prev = NULL;
@@ -229,7 +222,6 @@ void *SymTable_remove(SymTable_T table, const char *key)
     return NULL;
 }
 
-/* Applies SymTableMapFunction to every node in hash table */
 void SymTable_map(SymTable_T table, SymTableMapFunction apply, const void *param)
 {
     size_t i;
@@ -247,7 +239,6 @@ void SymTable_map(SymTable_T table, SymTableMapFunction apply, const void *param
     }
 }
 
-/* Expands hash table */
 static void SymTable_expand(SymTable_T table, size_t newSize)
 {
     Node_T *newBuckets;
@@ -279,7 +270,6 @@ static void SymTable_expand(SymTable_T table, size_t newSize)
     table->numBuckets = newSize;
 }
 
-/* Adds new node to correct bucket in hash table */
 int SymTable_put(SymTable_T table, const char *key, const void *value)
 {
     size_t hash;
@@ -312,25 +302,25 @@ int SymTable_put(SymTable_T table, const char *key, const void *value)
     {
         switch (table->numBuckets)
         {
-        case (509):
+        case (initial_num_buckets):
             SymTable_expand(table, second_bucket_size);
             break;
-        case (1021):
+        case (second_bucket_size):
             SymTable_expand(table, third_bucket_size);
             break;
-        case (2039):
+        case (third_bucket_size):
             SymTable_expand(table, fourth_bucket_size);
             break;
-        case (4093):
+        case (fourth_bucket_size):
             SymTable_expand(table, fifth_bucket_size);
             break;
-        case (8191):
+        case (fifth_bucket_size):
             SymTable_expand(table, sixth_bucket_size);
             break;
-        case (16381):
+        case (sixth_bucket_size):
             SymTable_expand(table, seventh_bucket_size);
             break;
-        case (32749):
+        case (seventh_bucket_size):
             SymTable_expand(table, eighth_bucket_size);
             break;
         default:
