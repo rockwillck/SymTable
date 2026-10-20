@@ -8,8 +8,11 @@
 /* Defines structure of node */
 struct SymTableNode
 {
+   /* binding key pointer */
    const char *key;
+   /* binding value pointer */
    void *value;
+   /* next node pointer */
    struct SymTableNode *next;
 };
 
@@ -18,11 +21,12 @@ typedef struct SymTableNode *Node_T;
 /* Defines structure of symbol table */
 struct SymTable
 {
+   /* Pointer to first node */
    Node_T first;
+   /* Number of bindings */
    size_t count;
 };
 
-/* Creates new symbol table */
 SymTable_T SymTable_new(void)
 {
    SymTable_T table;
@@ -38,7 +42,6 @@ SymTable_T SymTable_new(void)
    return table;
 }
 
-/* Frees symbol table */
 void SymTable_free(SymTable_T table)
 {
    Node_T current;
@@ -55,7 +58,6 @@ void SymTable_free(SymTable_T table)
    free(table);
 }
 
-/* Gets number of nodes in symbol table */
 size_t SymTable_getLength(SymTable_T table)
 {
    assert(table != NULL);
@@ -63,7 +65,6 @@ size_t SymTable_getLength(SymTable_T table)
    return table->count;
 }
 
-/* Put new node at start of linked list */
 int SymTable_put(SymTable_T table, const char *key, const void *value)
 {
    Node_T new;
@@ -99,7 +100,6 @@ int SymTable_put(SymTable_T table, const char *key, const void *value)
    return 1;
 }
 
-/* Replaces old value with new value */
 void *SymTable_replace(SymTable_T table, const char *key, const void *value)
 {
    Node_T current;
@@ -121,7 +121,6 @@ void *SymTable_replace(SymTable_T table, const char *key, const void *value)
    return oldValue;
 }
 
-/* Checks if key is in symbol table */
 int SymTable_contains(SymTable_T table, const char *key)
 {
    Node_T current;
@@ -139,7 +138,6 @@ int SymTable_contains(SymTable_T table, const char *key)
    return 0;
 }
 
-/* Gets value of key in symbol table */
 void *SymTable_get(SymTable_T table, const char *key)
 {
    Node_T current;
@@ -158,7 +156,6 @@ void *SymTable_get(SymTable_T table, const char *key)
    return NULL;
 }
 
-/* removes node from symbol table */
 void *SymTable_remove(SymTable_T table, const char *key)
 {
    Node_T current;
@@ -193,7 +190,6 @@ void *SymTable_remove(SymTable_T table, const char *key)
    return NULL;
 }
 
-/* */
 void SymTable_map(SymTable_T table, SymTableMapFunction apply,
                   const void *param)
 {
