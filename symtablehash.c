@@ -3,6 +3,7 @@
 /* Author:   William and Megan                                        */
 /*--------------------------------------------------------------------*/
 
+/* includes header file */
 #include "symtable.h"
 
 /* The number of buckets in hash table to begin with */

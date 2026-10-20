@@ -1,3 +1,5 @@
+/* Header file */
+
 #ifndef SYMTABLE_H
 #define SYMTABLE_H
 
@@ -49,7 +51,7 @@ void *SymTable_remove(SymTable_T table, const char *key);
 /* Defines a function pointer type that take in a key, value, and extra parameter */
 typedef void (*SymTableMapFunction)(const char *key, void *value,
                                     void *param);
-/* SymTable_map takes a symbol table, apply function and extra parameter. Iterates through 
+/* SymTable_map takes a symbol table, apply function and extra parameter. Iterates through
 each node in the symbol table and applies SymTableMapFunction to each element. Returns nothing */
 void SymTable_map(SymTable_T table, SymTableMapFunction apply,
                   const void *param);
