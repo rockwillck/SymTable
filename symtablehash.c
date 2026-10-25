@@ -301,7 +301,7 @@ int SymTable_put(SymTable_T table, const char *key, const void *value)
         return 0;
     }
 
-    if (table->count == table->numBuckets)
+    /* if (table->count == table->numBuckets)
     {
         switch (table->numBuckets)
         {
@@ -330,7 +330,7 @@ int SymTable_put(SymTable_T table, const char *key, const void *value)
             break;
         }
     }
-
+*/
     hash = SymTable_hash(keyCopy, table->numBuckets);
 
     new->key = keyCopy;
