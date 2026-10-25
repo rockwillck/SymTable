@@ -3,7 +3,7 @@ Assignment 3 readme File
 ------------------------------------------------------------------------
 What is your name?
 
-
+William Choi-Kim and Megan Healy
 
 ------------------------------------------------------------------------
 What authorized sources of information did you use to complete the
@@ -13,7 +13,7 @@ in the "Policies" web page (also available on armlab in the file
 and edit it as appropriate.
 
 
-
+Gemini, ChatGBT, Kings textbook, lecture slides, precept notes 
 ------------------------------------------------------------------------
 What unauthorized sources of information did you use to complete the
 assignment? List any unauthorized sources of information that you used
@@ -27,7 +27,7 @@ to the Committee on Discipline. Write "None" if you used no
 unauthorized sources of information.
 
 
-
+None
 ------------------------------------------------------------------------
 In fulfillment of the requirement from section 2.4.3 of the Academic
 Regulations in Princeton's Rights, Rules, Responsibilities guide,
@@ -37,7 +37,7 @@ This paper represents my own work in accordance with University
 regulations.
 
 
-
+William Choi-Kim, Megan Healy
 ------------------------------------------------------------------------
 In fulfillment of the requirement from section 2.4.6 of the Academic
 Regulations in Princeton's Rights, Rules, Responsibilities guide,
@@ -45,26 +45,36 @@ and the COS 217 Generative AI policy, disclose and describe how you
 used AI in completing this assignment:
 
 
+Megan- 
+I used ChatGBT for help understanding assignement specifications, I throughrly read through the assignment instrustions and would ask ChatGBT if I was confused with a prompt but just used to understand not to write any code.
+I used ChatGBT for help better understanding C concepts like typedef and ->. I read through the textbook as well to understand but just wanted to solidify understanding with more interpretations.
+William and I wrote our functions together but I still went back and tried to reproduce functions on my own and asked ChatGBT if I did things correctly and to explain previous logic we had to current logic. 
+I used ChatGBT to help me debug CritTer priority messages and to check to make sure my comments were good, I still tried to debug myself first and all comments were my own thinking and writing. 
+I used ChatGBT to walk me through how to use Valgrind but also went through the precept guide to learn better. 
+I used ChatGBT because I was not pushing and pull properly from github so asked ChatGBT what I was doing wrong.
+I used AI to check my logic for the Makefile and if I had my dependencies right. I also used ChatGBT to help me find a syntax error in my Makefile that I could not find for some reason. 
+
+William and I- 
+We had a memory leak we could not identify so we used AI to help identify were our memory leak was and then suggestion on how to fix it. It told us that we should swap pointers of hashtables when expanding our hashtable so we implemented this suggestion writing our own code to do so. 
 
 ------------------------------------------------------------------------
 What is your assessment of the assignment? Was it helpful? Was it fun?
 
 
-
+It was very helpful but overwhelming and I am glad I had a partner to do it with because if I tried to do this alone it would have taken me over 15 hours. 
 ------------------------------------------------------------------------
 (optional) What information can you provide about your submission that
 will help your grader to grade it in the most favorable light? In
 particular, what bugs are in your submission?
 
 
-
+No bugs in submission
 ------------------------------------------------------------------------
 What warnings does splint generate on symtablelist.c, and what are your
 disagreements with them? Copy the splint warnings here, and express your
 disagreement after each warning. If there are no warnings, then write
 "None."
-
-
+None
 
 ------------------------------------------------------------------------
 What warnings does critTer generate on symtablelist.c, and what are your
@@ -72,15 +82,23 @@ disagreements with them? Copy the critTer warnings here, and express
 your disagreement after each warning. If there are no warnings, then
 write "None."
 
+ symtablelist.c: line 70: medium priority:
+   Do you want to validate 'value' through an assert?
 
+   symtablelist.c: line 105: medium priority:
+   Do you want to validate 'value' through an assert?
 
+   symtablelist.c: line 196: medium priority:
+   Do you want to validate 'param' through an assert?
+
+We disagree with the CritTer warning on symtablelist.c because value and param should not be tested using assert because there values are allowed to be NULL. 
 ------------------------------------------------------------------------
 What warnings does splint generate on symtablehash.c, and what are your
 disagreements with them? Copy the splint warnings here, and express your
 disagreement after each warning. If there are no warnings, then write
 "None."
 
-
+None
 
 ------------------------------------------------------------------------
 What warnings does critTer generate on symtablehash.c, and what are your
@@ -88,8 +106,16 @@ disagreements with them? Copy the critTer warnings here, and express
 your disagreement after each warning. If there are no warnings, then
 write "None."
 
+symtablehash.c: line 128: medium priority:
+   Do you want to validate 'value' through an assert?
 
+   symtablehash.c: line 228: medium priority:
+   Do you want to validate 'param' through an assert?
 
+   symtablehash.c: line 277: medium priority:
+   Do you want to validate 'value' through an assert?
+
+We disagree with the CritTer warning on symtablelist.c because value and param should not be tested using assert because there values are allowed to be NULL. 
 ------------------------------------------------------------------------
 What are the CPU times reported by testsymtable.c with binding counts
 50, 500, 5000, 50000, and 500000 using (1) your linked list
@@ -97,22 +123,22 @@ implementation, (2) your non-expanding hash table implementation, and
 (3) your expanding hash table implementation? Fill in the blanks.
 
 The linked list implementation with:
--- 50 bindings consumed ________ seconds.
--- 500 bindings consumed ________ seconds.
--- 5000 bindings consumed ________ seconds.
--- 50000 bindings consumed ________ seconds.
--- 500000 bindings consumed ________ seconds.
+-- 50 bindings consumed ___0.000000_____ seconds.
+-- 500 bindings consumed ____0.000000____ seconds.
+-- 5000 bindings consumed ____0.126846____ seconds.
+-- 50000 bindings consumed ____18.749355____ seconds.
+-- 500000 bindings consumed ____N/A (Process Killed)____ seconds.
 
 The non-expanding hash table implementation with:
--- 50 bindings consumed ________ seconds.
--- 500 bindings consumed ________ seconds.
--- 5000 bindings consumed ________ seconds.
--- 50000 bindings consumed ________ seconds.
--- 500000 bindings consumed ________ seconds.
+-- 50 bindings consumed ____0.000000____ seconds.
+-- 500 bindings consumed ___0.000000_____ seconds.
+-- 5000 bindings consumed ___0.000000_____ seconds.
+-- 50000 bindings consumed ___0.153737_____ seconds.
+-- 500000 bindings consumed ____35.917397____ seconds.
 
 The expanding hash table implementation with:
--- 50 bindings consumed ________ seconds.
--- 500 bindings consumed ________ seconds.
--- 5000 bindings consumed ________ seconds.
--- 50000 bindings consumed ________ seconds.
--- 500000 bindings consumed ________ seconds.
+-- 50 bindings consumed ___0.000000_____ seconds.
+-- 500 bindings consumed ____0.000000____ seconds.
+-- 5000 bindings consumed ___0.000000_____ seconds.
+-- 50000 bindings consumed ____0.032317____ seconds.
+-- 500000 bindings consumed ___0.446003_____ seconds.
