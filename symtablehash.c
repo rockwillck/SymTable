@@ -5,22 +5,11 @@
 
 #include "symtable.h"
 
-/* The number of buckets in hash table to begin with */
-#define initial_num_buckets 509
-/* defines number of buckets in hash table after doubling once */
-#define second_bucket_size 1021
-/* defines number of buckets in hash table after doubling twice */
-#define third_bucket_size 2039
-/* defines number of buckets in hash table after doubling 3 times */
-#define fourth_bucket_size 4093
-/* defines number of buckets in hash table after doubling 4 times */
-#define fifth_bucket_size 8191
-/* defines number of buckets in hash table after doubling 5 times */
-#define sixth_bucket_size 16381
-/* defines number of buckets in hash table after doubling 6 times */
-#define seventh_bucket_size 32749
-/* defines number of buckets in hash table after doubling 7 times */
-#define eighth_bucket_size 65521
+/* bucket_counts is an array of the different bucket sizes */
+static const size_t bucket_counts[] = {509, 1021, 2039, 4093, 8191, 16381, 32749, 65521};
+
+/* numBucketCounts keeps track the number of available buckets */
+static const size_t numBucketCounts = sizeof(bucket_counts) / sizeof(bucket_counts[0]);
 
 /* Defines Node_T as a pointer of struct Node type */
 typedef struct Node *Node_T;
@@ -34,6 +23,8 @@ struct SymTable
     Node_T *buckets;
     /* Number of bindings */
     size_t count;
+    /* index in bucket_counts */
+    size_t bucketCountIndex;
 };
 
 /* Defines structure of a node */
@@ -77,8 +68,10 @@ SymTable_T SymTable_new(void)
     table = malloc(sizeof(struct SymTable));
     if (table == NULL)
         return NULL;
-    table->numBuckets = initial_num_buckets;
-    table->buckets = SymTable_create_buckets(initial_num_buckets);
+
+    table->numBuckets = bucket_counts[0];
+    table->bucketCountIndex = 0;
+    table->buckets = SymTable_create_buckets(bucket_counts[0]);
     table->count = 0;
     if (table->buckets == NULL)
     {
@@ -276,6 +269,7 @@ static void SymTable_expand(SymTable_T table, size_t newSize)
 int SymTable_put(SymTable_T table, const char *key, const void *value)
 {
     size_t hash;
+    size_t nextBucketIndex;
     const char *keyCopy;
     Node_T new;
 
@@ -303,31 +297,15 @@ int SymTable_put(SymTable_T table, const char *key, const void *value)
 
     if (table->count == table->numBuckets)
     {
-        switch (table->numBuckets)
+        if (table->bucketCountIndex + 1 < numBucketCounts)
         {
-        case (initial_num_buckets):
-            SymTable_expand(table, second_bucket_size);
-            break;
-        case (second_bucket_size):
-            SymTable_expand(table, third_bucket_size);
-            break;
-        case (third_bucket_size):
-            SymTable_expand(table, fourth_bucket_size);
-            break;
-        case (fourth_bucket_size):
-            SymTable_expand(table, fifth_bucket_size);
-            break;
-        case (fifth_bucket_size):
-            SymTable_expand(table, sixth_bucket_size);
-            break;
-        case (sixth_bucket_size):
-            SymTable_expand(table, seventh_bucket_size);
-            break;
-        case (seventh_bucket_size):
-            SymTable_expand(table, eighth_bucket_size);
-            break;
-        default:
-            break;
+            nextBucketIndex = table->bucketCountIndex + 1;
+            SymTable_expand(table, bucket_counts[nextBucketIndex]);
+            if (table->numBuckets == bucket_counts[nextBucketIndex])
+            {
+                table->bucketCountIndex = nextBucketIndex;
+            }
+            table->bucketCountIndex = nextBucketIndex;
         }
     }
 
